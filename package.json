@@ -1,0 +1,58 @@
+{
+  "name": "@chubbyts/chubbyts-undici-server",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Use undici within a server framework",
+  "keywords": [],
+  "author": "Dominik Zogg",
+  "license": "MIT",
+  "repository": "chubbyts/chubbyts-undici-server",
+  "scripts": {
+    "build": "tsc",
+    "cs-fix": "prettier --write src tests",
+    "cs": "prettier --check src tests",
+    "infection": "stryker run",
+    "lint-fix": "eslint src tests eslint.config.js vitest.config.ts --fix",
+    "lint": "eslint src tests",
+    "prepare": "npm run build",
+    "test": "vitest"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./*": {
+      "types": "./*.d.ts",
+      "import": "./*.js",
+      "default": "./*.js"
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@chubbyts/chubbyts-throwable-to-error": "^2.0.2",
+    "undici": "^7.16.0"
+  },
+  "devDependencies": {
+    "@chubbyts/chubbyts-eslint": "^4.0.7",
+    "@stryker-mutator/core": "^9.1.1",
+    "@stryker-mutator/vitest-runner": "^9.1.1",
+    "@types/node": "^24.3.1",
+    "@vitest/coverage-v8": "^3.2.4",
+    "cross-fetch": "^4.1.0",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

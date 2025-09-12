@@ -31,38 +31,24 @@ Use undici within a server framework.
 Through [NPM](https://www.npmjs.com) as [@chubbyts/chubbyts-undici-server][1].
 
 ```sh
-npm i @chubbyts/chubbyts-undici-server@^1.0.0
+npm i @chubbyts/chubbyts-undici-server@^1.0.1
 ```
 
 ## Usage
 
 ```ts
+import { STATUS_CODES } from 'node:http';
 import type { Handler, Middleware } from '@chubbyts/chubbyts-undici-server/dist/server';
 import { ServerRequest, Response } from '@chubbyts/chubbyts-undici-server/dist/server';
 
-const serverRequest = new ServerRequest('https://example.com/path/to/route', {
-  method: 'POST',
-  headers: {
-    accept: 'application/json',
-    'content-type': 'application/json'
-  },
-  body: JSON.stringify({ message: 'text' }),
-});
+const serverRequest = new ServerRequest('https://example.com/hello/world');
 
-const handler: Handler = async (serverRequest: ServerRequest): Promise<Response> => {
-  return new Response(
-    JSON.stringify({
-      method: serverRequest.method,
-      url: serverRequest.url,
-      headers: Object.fromEntries(serverRequest.headers.entries()),
-      body: await serverRequest.json(),
-    }),
-    {
-      status: 200,
-      statusText: 'OK',
-      headers: { 'content-type': 'application/json' },
-    },
-  );
+const handler: Handler = async (serverRequest: ServerRequest<{name: string}>): Promise<Response> => {
+  return new Response(`Hello, ${serverRequest.attributes.name}`, {
+    status: 200,
+    statusText: STATUS_CODES[200],
+    headers: {'content-type': 'text/plain'}
+  });
 };
 
 const middleware: Middleware = async (

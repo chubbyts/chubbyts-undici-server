@@ -13,7 +13,7 @@ describe('server', () => {
       expect(serverRequest.attributes).toMatchInlineSnapshot('{}');
     });
 
-    test('with url, with init, attributes', async () => {
+    test('with url, with init', async () => {
       const serverRequest = new ServerRequest('https://example.com', {
         method: 'POST',
         headers: { headerName: 'headerValue' },
@@ -53,7 +53,39 @@ describe('server', () => {
       expect(serverRequest.attributes).toMatchInlineSnapshot('{}');
     });
 
-    test('with request, with init, attributes', async () => {
+    test('with request, with init on inner request', async () => {
+      const serverRequest = new ServerRequest(
+        new ServerRequest('https://example.com', {
+          method: 'POST',
+          headers: { headerName: 'headerValue' },
+          body: 'body',
+          attributes: { attributeName: 'attributeValue' },
+        }),
+      );
+
+      expect(serverRequest.method).toBe('POST');
+      expect(serverRequest.url).toBe('https://example.com/');
+      expect([...serverRequest.headers.entries()]).toMatchInlineSnapshot(`
+        [
+          [
+            "content-type",
+            "text/plain;charset=UTF-8",
+          ],
+          [
+            "headername",
+            "headerValue",
+          ],
+        ]
+      `);
+      expect(await serverRequest.text()).toBe('body');
+      expect(serverRequest.attributes).toMatchInlineSnapshot(`
+        {
+          "attributeName": "attributeValue",
+        }
+      `);
+    });
+
+    test('with request, with init on outer request', async () => {
       const serverRequest = new ServerRequest(new ServerRequest('https://example.com'), {
         method: 'POST',
         headers: { headerName: 'headerValue' },

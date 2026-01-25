@@ -47,8 +47,10 @@ export type Middleware<A extends DA = DA> = (request: ServerRequest<A>, handler:
 export const pipe =
   <A extends DA>(middlewares: ReadonlyArray<Middleware<A>>): Middleware<A> =>
   async (request: ServerRequest<A>, handler: Handler<A>) => {
+    // eslint-disable-next-line functional/no-let
     let composed = handler;
 
+    // eslint-disable-next-line functional/no-let
     for (let i = middlewares.length - 1; i >= 0; i -= 1) {
       const middleware = middlewares[i];
       const next = composed;

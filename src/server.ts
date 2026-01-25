@@ -21,13 +21,13 @@ export class ServerRequest<A extends DA = DA> extends UndiciRequest {
   constructor(input: RequestInfo<A>, init?: RequestInit<A>) {
     super(input, init);
 
-    this.attributes = Object.freeze(
+    this.attributes = (
       init?.attributes
         ? { ...init.attributes }
         : input instanceof ServerRequest
           ? ({ ...input.attributes } as Partial<A>)
-          : {},
-    );
+          : {}
+    ) as Readonly<Partial<A>>;
 
     this.clone = () => new ServerRequest<A>(this);
   }

@@ -46,8 +46,14 @@ export type Middleware<A extends DA = DA> = (request: ServerRequest<A>, handler:
 
 export const pipe =
   <A extends DA>(middlewares: ReadonlyArray<Middleware<A>>): Middleware<A> =>
-  async (request: ServerRequest<A>, handler: Handler<A>) =>
-    middlewares.reduceRight<Handler<A>>(
-      (innerHandler, innerMiddleware) => (innerRequest) => innerMiddleware(innerRequest, innerHandler),
-      handler,
-    )(request);
+  async (request: ServerRequest<A>, handler: Handler<A>) => {
+    let composed = handler;
+
+    for (let i = middlewares.length - 1; i >= 0; i -= 1) {
+      const middleware = middlewares[i];
+      const next = composed;
+      composed = (innerRequest) => middleware(innerRequest, next);
+    }
+
+    return composed(request);
+  };

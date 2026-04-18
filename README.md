@@ -31,7 +31,7 @@ Use undici within a server framework.
 Through [NPM](https://www.npmjs.com) as [@chubbyts/chubbyts-undici-server][1].
 
 ```sh
-npm i @chubbyts/chubbyts-undici-server@^1.1.1
+npm i @chubbyts/chubbyts-undici-server@^1.1.2
 ```
 
 ## Usage
